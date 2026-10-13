@@ -1,0 +1,69 @@
+---
+import type { PublicSponsor } from "../lib/event";
+
+interface Props {
+  sponsors: PublicSponsor[];
+}
+const { sponsors } = Astro.props;
+
+const TIER_LABELS: Record<PublicSponsor["tier"], string> = {
+  platinum: "Platinum",
+  gold: "Gold",
+  silver: "Silver",
+  bronze: "Bronze",
+  community: "Community",
+  media: "Media",
+};
+const TIER_ORDER: PublicSponsor["tier"][] = ["platinum", "gold", "silver", "bronze", "community", "media"];
+const TIER_STYLES: Record<PublicSponsor["tier"], string> = {
+  platinum: "from-slate-200 to-slate-400 text-slate-900",
+  gold: "from-yellow-200 to-amber-400 text-amber-950",
+  silver: "from-slate-100 to-slate-300 text-slate-800",
+  bronze: "from-orange-200 to-orange-400 text-orange-900",
+  community: "from-emerald-100 to-emerald-300 text-emerald-900",
+  media: "from-indigo-100 to-indigo-300 text-indigo-900",
+};
+
+const grouped = TIER_ORDER
+  .map((tier) => ({ tier, items: sponsors.filter((s) => s.tier === tier) }))
+  .filter((g) => g.items.length > 0);
+---
+
+{sponsors.length > 0 && (
+  <section id="sponsors" class="py-16">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="mb-3 text-center text-3xl font-bold sm:text-4xl">Patrocinadores</h2>
+      <p class="mb-12 text-center text-slate-600">Gracias por hacer TechJoin posible.</p>
+
+      <div class="space-y-12">
+        {grouped.map(({ tier, items }) => (
+          <div>
+            <div class="mb-6 flex items-center justify-center gap-3">
+              <span class={`rounded-full bg-gradient-to-r ${TIER_STYLES[tier]} px-4 py-1 text-sm font-semibold uppercase tracking-wider`}>
+                {TIER_LABELS[tier]}
+              </span>
+            </div>
+            <div class="grid grid-cols-2 items-center justify-items-center gap-6 sm:grid-cols-3 md:grid-cols-4">
+              {items.map((sponsor) => {
+                const card = (
+                  <div class="flex h-32 w-full max-w-[200px] items-center justify-center rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200 transition hover:shadow-md">
+                    {sponsor.logoUrl ? (
+                      <img src={sponsor.logoUrl} alt={sponsor.name} loading="lazy" class="max-h-full max-w-full object-contain" />
+                    ) : (
+                      <span class="text-center text-sm font-medium text-slate-700">{sponsor.name}</span>
+                    )}
+                  </div>
+                );
+                return sponsor.url ? (
+                  <a href={sponsor.url} target="_blank" rel="noopener noreferrer" class="w-full max-w-[200px]">
+                    {card}
+                  </a>
+                ) : card;
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,39 @@
+---
+import type { PublicEvent } from "../lib/event";
+interface Props {
+  event: PublicEvent | null;
+  date?: string;
+}
+const { event, date } = Astro.props;
+const venue = event?.primaryVenue;
+const hasVenue = Boolean(venue?.name && venue.name !== "TBD");
+---
+
+{event && (
+  <section class="mx-auto max-w-5xl px-6 py-16">
+    <div class="grid gap-10 md:grid-cols-3">
+      <div class="md:col-span-2">
+        <h2 class="mb-4 text-2xl font-bold sm:text-3xl">Sobre el evento</h2>
+        {event.description && (
+          <p class="leading-relaxed text-slate-700">{event.description}</p>
+        )}
+      </div>
+      <div class="space-y-4 rounded-2xl bg-slate-50 p-6">
+        {date && (
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Fecha</div>
+            <div class="mt-1 text-lg font-semibold text-slate-900">{date}</div>
+          </div>
+        )}
+        {hasVenue && (
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Lugar</div>
+            <div class="mt-1 font-semibold text-slate-900">{venue!.name}</div>
+            {venue!.address && <div class="text-sm text-slate-600">{venue!.address}</div>}
+            {venue!.city && <div class="text-sm text-slate-600">{venue!.city}</div>}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
