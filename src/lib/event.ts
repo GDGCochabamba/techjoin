@@ -51,6 +51,7 @@ export interface PublicEvent {
   logoUrl: string;
   coverImageUrl: string;
   theme: EventTheme;
+  attendeeCount?: number;
 }
 
 export interface PublicParticipant {
@@ -104,6 +105,7 @@ function toEvent(id: string, data: Record<string, unknown>): PublicEvent {
     socialUrls: (data.socialUrls as SocialLinks) ?? {},
     logoUrl: (data.logoUrl as string) ?? "",
     coverImageUrl: (data.coverImageUrl as string) ?? "",
+    attendeeCount: data.attendeeCount as number | undefined,
     theme: (data.theme as EventTheme) ?? {
       primaryColor: "#2475e5",
       secondaryColor: "#34a853",
@@ -207,4 +209,39 @@ export function formatEventDate(e: PublicEvent): string {
   const sameDay = e.startDate.toDateString() === e.endDate.toDateString();
   if (sameDay) return SHORT_DATE.format(e.startDate);
   return `${SHORT_DATE.format(e.startDate)} – ${SHORT_DATE.format(e.endDate)}`;
+}
+
+const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+
+/** "13 SEP", in the event's timezone. */
+export function formatDayMonth(e: PublicEvent): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "numeric",
+    timeZone: e.timezone,
+  }).formatToParts(e.startDate);
+  const day = parts.find((p) => p.type === "day")?.value;
+  const month = Number(parts.find((p) => p.type === "month")?.value);
+  return `${day} ${MONTHS[month - 1]}`;
+}
+
+/** "8:00 a 15:30", in the event's timezone. */
+export function formatTimeRange(e: PublicEvent): string {
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hourCycle: "h23",
+    timeZone: e.timezone,
+  });
+  const format = (d: Date) => {
+    const parts = time.formatToParts(d);
+    const hour = Number(parts.find((p) => p.type === "hour")?.value);
+    const minute = parts.find((p) => p.type === "minute")?.value;
+    return `${hour}:${minute}`;
+  };
+  return `${format(e.startDate)} a ${format(e.endDate)}`;
+}
+
+export function isUpcoming(e: PublicEvent): boolean {
+  return e.endDate.getTime() > Date.now();
 }

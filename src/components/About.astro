@@ -1,39 +1,49 @@
 ---
-import type { PublicEvent } from "../lib/event";
-interface Props {
-  event: PublicEvent | null;
-  date?: string;
-}
-const { event, date } = Astro.props;
-const venue = event?.primaryVenue;
-const hasVenue = Boolean(venue?.name && venue.name !== "TBD");
+const highlights = [
+  {
+    title: "Charlas inspiradoras",
+    text: "Aprende de líderes de la industria sobre diferentes roles tecnológicos, trayectorias profesionales y lo que realmente se necesita para triunfar en tecnología. Desde ingeniería de software hasta gestión de productos, descubre dónde encajas.",
+  },
+  {
+    title: "Feria de Startups",
+    text: "Conoce startups innovadoras presentando sus productos y planes de contratación. Obtén información de primera mano sobre la cultura startup, tecnologías emergentes y oportunidades profesionales potenciales.",
+  },
+  {
+    title: "Oportunidades de Networking",
+    text: "Conecta con profesionales que buscan cambiar de carrera, mentores, reclutadores y profesionales de tecnología. Construye relaciones que podrían transformar tu trayectoria profesional.",
+  },
+];
 ---
 
-{event && (
-  <section class="mx-auto max-w-5xl px-6 py-16">
-    <div class="grid gap-10 md:grid-cols-3">
-      <div class="md:col-span-2">
-        <h2 class="mb-4 text-2xl font-bold sm:text-3xl">Sobre el evento</h2>
-        {event.description && (
-          <p class="leading-relaxed text-slate-700">{event.description}</p>
-        )}
-      </div>
-      <div class="space-y-4 rounded-2xl bg-slate-50 p-6">
-        {date && (
-          <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Fecha</div>
-            <div class="mt-1 text-lg font-semibold text-slate-900">{date}</div>
-          </div>
-        )}
-        {hasVenue && (
-          <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Lugar</div>
-            <div class="mt-1 font-semibold text-slate-900">{venue!.name}</div>
-            {venue!.address && <div class="text-sm text-slate-600">{venue!.address}</div>}
-            {venue!.city && <div class="text-sm text-slate-600">{venue!.city}</div>}
-          </div>
-        )}
-      </div>
+<section
+  id="sobre-el-evento"
+  class="tj-bg scroll-mt-16 px-6 py-16 text-white md:py-24"
+>
+  <div class="mx-auto max-w-[632px] text-center">
+    <h2 class="text-4xl leading-[1.2] font-bold md:text-[56px]">
+      Lo que hace especial a TechJoin
+    </h2>
+    <div
+      class="from-tj-cyan to-tj-purple mt-4 h-1 rounded-full bg-linear-to-r"
+      aria-hidden="true"
+    >
     </div>
-  </section>
-)}
+    <p class="mt-4 text-lg md:text-2xl">
+      Una experiencia integral diseñada para cerrar la brecha entre tu carrera
+      actual y tu futuro tecnológico.
+    </p>
+  </div>
+
+  <ul class="mx-auto mt-12 grid max-w-[1008px] gap-6 md:grid-cols-3">
+    {
+      highlights.map((item) => (
+        <li class="tj-card-rise px-6 py-12">
+          <h3 class="tj-text-gradient font-display pb-1 text-[32px] leading-tight font-medium">
+            {item.title}
+          </h3>
+          <p class="mt-2 leading-relaxed">{item.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

@@ -1,0 +1,60 @@
+---
+interface Props {
+  cta?: { label: string; href: string };
+}
+const { cta } = Astro.props;
+
+const links = [
+  { label: "Inicio", href: "#inicio" },
+  { label: "Detalles", href: "#detalles" },
+  { label: "Sobre el evento", href: "#sobre-el-evento" },
+];
+---
+
+<header class="bg-tj-ink sticky top-0 z-50 text-white">
+  <nav
+    class="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-6 px-6"
+    aria-label="Principal"
+  >
+    <a
+      href="#inicio"
+      class="focus-visible:outline-tj-cyan shrink-0 rounded focus-visible:outline-2 focus-visible:outline-offset-4"
+    >
+      <img
+        src="/techjoin/logo-white.svg"
+        alt="TechJoin by Google Developer Groups Cochabamba"
+        width="117"
+        height="30"
+        class="h-[30px] w-auto"
+      />
+    </a>
+    <div class="flex items-center gap-10">
+      <ul class="font-nav hidden items-center gap-10 text-sm md:flex">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="hover:text-tj-cyan focus-visible:outline-tj-cyan rounded transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        cta && (
+          <a
+            href={cta.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tj-btn focus-visible:outline-tj-cyan h-10 px-6 text-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+          >
+            {cta.label}
+          </a>
+        )
+      }
+    </div>
+  </nav>
+</header>

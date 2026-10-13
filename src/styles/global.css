@@ -1,1 +1,114 @@
 @import "tailwindcss";
+
+/* Tokens from the TechJoin 2025 design (Figma "GDG Events" → TechJoin Large Screen). */
+@theme {
+  --font-sans: "Google Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-nav: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-tj-cyan: #14ffe7;
+  --color-tj-blue: #188ee2;
+  --color-tj-purple: #6a3dff;
+  --color-tj-violet: #7260f9;
+  --color-tj-link: #4aa3f0;
+  --color-tj-ink: #020204;
+  --color-tj-muted: #d9d9d9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Teal → black → violet wash used by the hero and the highlights section. */
+@utility tj-bg {
+  background-color: #000;
+  background-image: linear-gradient(
+    105deg,
+    #0a403c 0%,
+    #000 37%,
+    #000 72%,
+    #1f1346 100%
+  );
+}
+
+@utility tj-text-gradient {
+  background-image: linear-gradient(
+    165deg,
+    var(--color-tj-cyan),
+    var(--color-tj-purple)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Dark card with a 1px cyan → violet border. */
+@utility tj-card {
+  border: 1px solid transparent;
+  border-radius: 2rem;
+  background:
+    linear-gradient(180deg, #1d1d1d, #090909) padding-box,
+    linear-gradient(165deg, var(--color-tj-cyan), var(--color-tj-purple))
+      border-box;
+}
+
+@utility tj-card-rise {
+  border: 1px solid transparent;
+  border-radius: 2rem;
+  background:
+    linear-gradient(180deg, #090909, #1d1d1d) padding-box,
+    linear-gradient(165deg, var(--color-tj-cyan), var(--color-tj-purple))
+      border-box;
+}
+
+@utility tj-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #fff;
+  font-weight: 500;
+  background-image: linear-gradient(
+    100deg,
+    var(--color-tj-cyan) 0%,
+    var(--color-tj-blue) 45%,
+    var(--color-tj-purple) 100%
+  );
+  box-shadow:
+    inset 2px 2px 2px rgb(255 255 255 / 0.25),
+    inset -1px -1px 2px rgb(0 0 0 / 0.35);
+  transition: filter 150ms ease;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+@utility tj-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  color: #fff;
+  font-weight: 500;
+  background:
+    linear-gradient(#000, #000) padding-box,
+    linear-gradient(90deg, #35b6f0, #1e698a) border-box;
+  box-shadow:
+    inset 2px 2px 2px rgb(255 255 255 / 0.25),
+    inset -1px -1px 2px rgb(0 0 0 / 0.35);
+  transition: background 150ms ease;
+
+  &:hover {
+    background:
+      linear-gradient(#0b1a22, #0b1a22) padding-box,
+      linear-gradient(90deg, #35b6f0, #1e698a) border-box;
+  }
+}

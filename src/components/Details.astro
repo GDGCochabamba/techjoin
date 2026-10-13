@@ -1,0 +1,100 @@
+---
+import { Image } from "astro:assets";
+import background from "../assets/details-bg.webp";
+import {
+  formatDayMonth,
+  formatTimeRange,
+  type PublicEvent,
+} from "../lib/event";
+
+interface Props {
+  event: PublicEvent;
+}
+const { event } = Astro.props;
+const venue = event.primaryVenue;
+
+interface Detail {
+  icon: string;
+  label: string;
+  value: string | number;
+  note: string;
+  noteHref?: string;
+}
+
+const details: Detail[] = [
+  {
+    icon: "/techjoin/icon-calendar.svg",
+    label: "¿Cuándo?",
+    value: formatDayMonth(event),
+    note: formatTimeRange(event),
+  },
+];
+if (venue?.name && venue.name !== "TBD") {
+  details.push({
+    icon: "/techjoin/icon-pin.svg",
+    label: "¿Dónde?",
+    value: venue.name,
+    note: venue.mapUrl ? "Ver mapa" : venue.city,
+    noteHref: venue.mapUrl,
+  });
+}
+if (event.attendeeCount !== undefined) {
+  details.push({
+    icon: "/techjoin/icon-ticket.svg",
+    label: "Asistieron",
+    value: event.attendeeCount,
+    note: "personas",
+  });
+}
+---
+
+<section
+  id="detalles"
+  class="relative isolate scroll-mt-16 overflow-hidden bg-black"
+>
+  <Image
+    src={background}
+    alt=""
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+  />
+  <ul
+    class="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 py-16 sm:flex-row sm:flex-wrap sm:items-stretch sm:justify-center md:py-24"
+  >
+    {
+      details.map((detail) => (
+        <li class="tj-card flex w-full max-w-[400px] items-center gap-5 px-5 py-6 sm:w-[260px] sm:flex-col sm:gap-8 sm:px-6 sm:py-12">
+          <img
+            src={detail.icon}
+            alt=""
+            width="120"
+            height="120"
+            class="size-16 shrink-0 sm:size-[120px]"
+          />
+          <div class="w-full">
+            <p class="font-display text-tj-violet font-medium">
+              {detail.label}
+            </p>
+            <p class="mt-1 text-3xl leading-none font-bold text-white sm:mt-2 sm:text-[40px]">
+              {detail.value}
+            </p>
+            {detail.noteHref ? (
+              <a
+                href={detail.noteHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-display text-tj-link focus-visible:outline-tj-cyan mt-2 inline-block rounded font-medium hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                {detail.note}
+              </a>
+            ) : (
+              <p class="font-display mt-2 font-medium text-white">
+                {detail.note}
+              </p>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>

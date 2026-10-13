@@ -1,15 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
 import Hero from "../components/Hero.astro";
+import Details from "../components/Details.astro";
 import About from "../components/About.astro";
 import Speakers from "../components/Speakers.astro";
 import Sponsors from "../components/Sponsors.astro";
+import CallToAction from "../components/CallToAction.astro";
 import Footer from "../components/Footer.astro";
 import {
-  formatEventDate,
   getEventBySlug,
   getEventSpeakers,
   getEventSponsors,
+  isUpcoming,
 } from "../lib/event";
 
 const slug = import.meta.env.PUBLIC_EVENT_SLUG ?? "techjoin-2025";
@@ -25,13 +28,47 @@ if (event) {
 }
 
 const title = event ? `${event.name} ${event.edition}` : "TechJoin Cochabamba";
-const formattedDate = event ? formatEventDate(event) : undefined;
+const description =
+  event?.description ||
+  "TechJoin es el evento de networking donde los profesionales que buscan cambiar de carrera se encuentran con la tecnología.";
+
+// Before the event the main action is registering; afterwards, its page on gdg.community.dev.
+const heroCta =
+  event && isUpcoming(event) && event.registrationUrl
+    ? { label: "Regístrate", href: event.registrationUrl }
+    : event?.externalUrl
+      ? { label: "Ver detalle del evento", href: event.externalUrl }
+      : undefined;
+const navCta = heroCta && {
+  ...heroCta,
+  label: heroCta.label === "Regístrate" ? heroCta.label : "Ver detalle",
+};
+
+// Once the event is over, invite people to the chapter to hear about the next edition.
+const closing =
+  event && isUpcoming(event) && event.registrationUrl
+    ? {
+        text: "Únete a cientos de profesionales dando el primer paso hacia su carrera tecnológica. Regístrate ahora para este evento gratuito y comienza tu viaje hacia la tecnología.",
+        cta: { label: "Regístrate", href: event.registrationUrl },
+      }
+    : {
+        text: "Únete a cientos de profesionales dando el primer paso hacia su carrera tecnológica. Súmate a GDG Cochabamba y entérate de la próxima edición de TechJoin.",
+        cta: {
+          label: "Únete a la comunidad",
+          href: "https://gdg.community.dev/gdg-cochabamba/",
+        },
+      };
 ---
 
-<Layout title={title}>
-  <Hero event={event} date={formattedDate} />
-  <About event={event} date={formattedDate} />
-  <Speakers speakers={speakers} />
-  <Sponsors sponsors={sponsors} />
+<Layout title={title} description={description}>
+  <Navbar cta={navCta} />
+  <main>
+    <Hero description={description} cta={heroCta} />
+    {event && <Details event={event} />}
+    <About />
+    <Speakers speakers={speakers} />
+    <Sponsors sponsors={sponsors} />
+    <CallToAction text={closing.text} cta={closing.cta} />
+  </main>
   <Footer event={event} />
 </Layout>

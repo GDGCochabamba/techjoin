@@ -1,0 +1,28 @@
+---
+interface Props {
+  text: string;
+  cta: { label: string; href: string };
+}
+const { text, cta } = Astro.props;
+---
+
+<section class="bg-[#070707] px-6 py-24 text-center text-white md:py-32">
+  <h2
+    class="tj-text-gradient font-display mx-auto max-w-[1023px] pb-1 text-4xl leading-none font-medium md:text-[64px]"
+  >
+    ¿Listo para transformar tu carrera?
+  </h2>
+  <p
+    class="text-tj-muted mx-auto mt-4 max-w-[1023px] text-lg leading-snug md:text-2xl"
+  >
+    {text}
+  </p>
+  <a
+    href={cta.href}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="tj-btn focus-visible:outline-tj-cyan mt-9 h-[61px] w-full px-8 text-xl whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 sm:w-auto sm:min-w-64 md:text-2xl"
+  >
+    {cta.label}
+  </a>
+</section>

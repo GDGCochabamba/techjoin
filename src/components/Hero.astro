@@ -1,51 +1,55 @@
 ---
-import type { PublicEvent } from "../lib/event";
 interface Props {
-  event: PublicEvent | null;
-  date?: string;
+  description: string;
+  cta?: { label: string; href: string };
 }
-const { event, date } = Astro.props;
-const primary = event?.theme?.primaryColor ?? "#2475e5";
-const secondary = event?.theme?.secondaryColor ?? "#34a853";
+const { description, cta } = Astro.props;
 ---
 
 <section
-  class="relative overflow-hidden text-white"
-  style={`background-image: linear-gradient(135deg, ${primary} 0%, ${secondary} 100%);`}
+  id="inicio"
+  class="tj-bg relative scroll-mt-16 overflow-hidden text-white"
 >
-  <div class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-24 text-center">
-    {event?.logoUrl && (
-      <img src={event.logoUrl} alt={event.name} class="mb-2 h-20 w-auto" />
-    )}
-    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-      {event?.name ?? "TechJoin"} {event?.edition ?? ""}
-    </h1>
-    {event?.tagline && (
-      <p class="max-w-3xl text-lg text-white/90 sm:text-xl">{event.tagline}</p>
-    )}
-    {date && (
-      <div class="mt-2 rounded-full bg-white/15 px-5 py-2 text-sm font-medium backdrop-blur">
-        {date}
-      </div>
-    )}
-    {event?.registrationUrl && (
-      <a
-        href={event.registrationUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-slate-900 shadow transition hover:bg-slate-100"
+  <div
+    class="relative mx-auto max-w-[1440px] px-6 pt-20 pb-24 md:px-16 md:pt-32 md:pb-32 xl:min-h-[667px]"
+  >
+    <div class="relative z-10 xl:max-w-[min(778px,52vw)]">
+      <h1
+        class="tj-text-gradient font-display max-w-[640px] pb-1 text-5xl leading-none font-medium md:text-[64px]"
       >
-        Registrarme
-      </a>
-    )}
-  </div>
-  {event?.coverImageUrl && (
-    <div class="relative mx-auto -mt-8 max-w-5xl px-6 pb-12">
-      <img
-        src={event.coverImageUrl}
-        alt={`${event.name} cover`}
-        class="mx-auto w-full max-w-3xl rounded-2xl shadow-2xl"
-      />
+        Conecta, aprende y transforma tu carrera.
+      </h1>
+      <p class="text-tj-muted mt-6 max-w-[778px] text-lg leading-snug md:text-2xl">
+        {description}
+      </p>
+      <div class="mt-12 flex flex-wrap gap-4 sm:gap-6">
+        {
+          cta && (
+            <a
+              href={cta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="tj-btn focus-visible:outline-tj-cyan h-[61px] w-full px-8 text-xl whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 sm:w-auto sm:min-w-64 md:text-2xl"
+            >
+              {cta.label}
+            </a>
+          )
+        }
+        <a
+          href="#sobre-el-evento"
+          class="tj-btn-outline focus-visible:outline-tj-cyan h-[61px] w-full px-8 text-xl whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 sm:w-auto sm:min-w-64 md:text-2xl"
+        >
+          Saber más
+        </a>
+      </div>
     </div>
-  )}
+    <img
+      src="/techjoin/hero-art.svg"
+      alt=""
+      aria-hidden="true"
+      width="654"
+      height="621"
+      class="pointer-events-none absolute top-[249px] right-[-122px] hidden w-[min(654px,45vw)] xl:block"
+    />
+  </div>
 </section>
