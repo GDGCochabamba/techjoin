@@ -17,6 +17,8 @@ import {
 
 const slug = import.meta.env.PUBLIC_EVENT_SLUG ?? "techjoin-2025";
 const event = await getEventBySlug(slug);
+// Never publish an empty landing: fail the build if the event isn't in the database.
+if (!event) throw new Error(`Event "${slug}" not found in Firestore`);
 
 let speakers: Awaited<ReturnType<typeof getEventSpeakers>> = [];
 let sponsors: Awaited<ReturnType<typeof getEventSponsors>> = [];

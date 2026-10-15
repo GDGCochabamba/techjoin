@@ -47,9 +47,15 @@ function initials(name: string): string {
       <ul class="mx-auto mt-12 flex max-w-6xl flex-wrap justify-center gap-6">
         {speakers.map(({ participant, person }) => {
           const bio = participant.bioOverride ?? person.bio;
-          const socials = Object.entries(person.socials).filter(
-            ([, url]) => url,
-          );
+          // Firestore doesn't keep the order of map keys, so list the links in the
+          // order of SOCIAL_LABELS (LinkedIn first) and unknown ones last.
+          const rank = (type: string) => {
+            const i = Object.keys(SOCIAL_LABELS).indexOf(type);
+            return i === -1 ? Infinity : i;
+          };
+          const socials = Object.entries(person.socials)
+            .filter(([, url]) => url)
+            .sort(([a], [b]) => rank(a) - rank(b));
           return (
             <li class="tj-card-rise flex w-full flex-col p-4 sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]">
               {person.photoUrl ? (
